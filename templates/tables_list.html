@@ -1,0 +1,58 @@
+
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-container">
+  <h2 class="page-title">Table list</h2>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+
+<h2>Manage Tables</h2>
+
+<form method="POST">
+  <label>Branch ID</label>
+  <input type="number" name="branch_id" required>
+
+  <label>Capacity</label>
+  <input type="number" name="capacity" required>
+
+  <label>Status</label>
+  <select name="status">
+    <option value="available">Available</option>
+    <option value="reserved">Reserved</option>
+    <option value="occupied">Occupied</option>
+  </select>
+
+  <button type="submit">Add Table</button>
+</form>
+
+<hr>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Branch</th>
+    <th>Capacity</th>
+    <th>Status</th>
+  </tr>
+  {% for t in tables %}
+  <tr>
+    <td>{{ t.id }}</td>
+    <td>{{ t.branch_id }}</td>
+    <td>{{ t.capacity }}</td>
+    <td>{{ t.status }}</td>
+  </tr>
+  {% endfor %}
+  {% endblock %}
+</table>

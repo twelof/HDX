@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Menu</h2>
+
+<!-- Add New Item Form (visible only to Manager/Chef) -->
+<form method="POST" action="/menu/edit" class="form-card">
+    <label>new Name</label>
+    <input type="text" name="name" required>
+
+    <label> newDescription</label>
+    <textarea name="description" required></textarea>
+
+    <label>Price (KES)</label>
+    <input type="number" name="price" step="0.01" required>
+
+    <label>Section</label>
+    <select name="section" required>
+        <option value="Starter">Starter</option>
+        <option value="Main Course">Main Course</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Drink">Drink</option>
+    </select>
+    <label>Image</label>
+    <input type="file" name="image">
+
+    <button class="btn-primary" type="submit">update item</button>
+</form>
+{% endblock %}

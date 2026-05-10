@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Reports Dashboard</h2>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <h3>Daily Sales</h3>
+    <p>{{ daily_sales }} KES</p>
+  </div>
+  <div class="metric-card">
+    <h3>Guests Served</h3>
+    <p>{{ guests_served }}</p>
+  </div>
+</div>
+
+<hr>
+
+<h3>Monthly Sales</h3>
+<canvas id="monthlySalesChart"></canvas>
+
+<h3>Yearly Sales</h3>
+<canvas id="yearlySalesChart"></canvas>
+
+<h3>Orders by Status</h3>
+<canvas id="ordersStatusChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Monthly Sales Chart
+  const monthlySalesCtx = document.getElementById('monthlySalesChart');
+  new Chart(monthlySalesCtx, {
+    type: 'bar',
+    data: {
+      labels: [{{ monthly_sales|map(attribute=0)|join("','")|safe|replace("'", "'")|replace(",", "','") }}],
+      datasets: [{
+        label: 'Monthly Sales (KES)',
+        data: [{{ monthly_sales|map(attribute=1)|join(",") }}],
+        backgroundColor: '#e67e22'
+      }]
+    }
+  });
+
+  // Yearly Sales Chart
+  const yearlySalesCtx = document.getElementById('yearlySalesChart');
+  new Chart(yearlySalesCtx, {
+    type: 'line',
+    data: {
+      labels: [{{ yearly_sales|map(attribute=0)|join("','")|safe|replace("'", "'")|replace(",", "','") }}],
+      datasets: [{
+        label: 'Yearly Sales (KES)',
+        data: [{{ yearly_sales|map(attribute=1)|join(",") }}],
+        borderColor: '#27ae60',
+        fill: false
+      }]
+    }
+  });
+
+  // Orders by Status Chart
+  const ordersStatusCtx = document.getElementById('ordersStatusChart');
+  new Chart(ordersStatusCtx, {
+    type: 'pie',
+    data: {
+      labels: [{{ orders_status|map(attribute=0)|join("','")|safe|replace("'", "'")|replace(",", "','") }}],
+      datasets: [{
+        data: [{{ orders_status|map(attribute=1)|join(",") }}],
+        backgroundColor: ['#3498db','#f1c40f','#e74c3c','#2ecc71']
+      }]
+    }
+  });
+</script>
+{% endblock %}

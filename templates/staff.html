@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Staff Management</h2>
+
+<!-- Add Staff Form -->
+<form method="POST" action="/staff/new" class="form-card">
+    <label>Name</label>
+    <input type="text" name="name" required>
+
+    <label>Role</label>
+    <select name="role">
+        <option value="Receptionist">Receptionist</option>
+        <option value="Waiter">Waiter</option>
+        <option value="Chef">Chef</option>
+        <option value="Manager">Manager</option>
+    </select>
+
+    <label>Contact</label>
+    <input type="text" name="contact">
+
+    <button class="btn-primary" type="submit">Add Staff</button>
+</form>
+
+<!-- Staff List -->
+<div class="card-grid">
+    {% for user in staff %}
+    <div class="card">
+        <h3>{{ user.name }}</h3>
+        <p>Role: {{ user.role }}</p>
+        <p>Contact: {{ user.contact }}</p>
+
+        <!-- Remove button for each staff member -->
+        <form method="POST" action="/staff/remove/{{ user.id }}">
+            <button class="btn-secondary" type="submit">Remove</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          <span>{{ message }}</span>
+          <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+{% endblock %}

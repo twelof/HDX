@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <div class="hero-text">
+        <span class="tagline">Modern dining, simplified.</span>
+        <h1>Where every seat, order & payment feels effortless.</h1>
+        <p>
+            Book a table, browse the menu, place orders, and pay securely with M-Pesa. 
+            Built for guests, waiters, chefs, receptionists and managers — one home for the whole restaurant.
+        </p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('menu') }}" class="btn-primary">Explore menu</a>
+            <a href="{{ url_for('reservations') }}" class="btn-secondary">Reserve a table</a>
+        </div>
+    </div>
+</div>
+
+<div class="special">
+    <h2>TODAY'S SPECIAL</h2>
+    <div class="card">
+        <h3>Coastal Pilau</h3>
+        <p>Slow-cooked spiced rice with tender beef.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Reservations</h2>
+
+<form method="POST" action="/reservations/new" class="form-card">
+    <label>Table</label>
+    <select id="table_id" name="table_id">
+        {% for table in tables %}
+        <option value="{{ table.id }}">Table {{ table.id }} (Capacity: {{ table.capacity }})</option>
+        {% endfor %}
+    </select><br>
+
+   <br> <label>Guest Name</label>
+    <input type="text" name="guest_name" required>
+
+    <label>Party Size</label>
+    <input type="number" name="party_size" min="1" required>
+
+    <label>Date</label>
+    <input type="date" name="date" required>
+
+    <label>Time</label>
+    <input type="time" name="time" required>
+
+    <button class="btn-primary" type="submit">Reserve Table</button>
+</form>
+{% for res in reservations %}
+<tr>
+    <td>{{ res.table_id }}</td>
+    <td>{{ res.date }}</td>
+    <td>{{ res.time }}</td>
+    <td>{{ res.status }}</td>
+    <td>
+        <form method="POST" action="/reservations/cancel/{{ res.id }}">
+            <button>Cancel</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+
+
+<div class="card-grid">
+    {% for res in reservations %}
+    <div class="card">
+        <h3>Reservation #{{ res.id }}</h3>
+        <p>Table {{ res.table_id }} | {{ res.date }} {{ res.time }}</p>
+        <p>Status: {{ res.status }}</p>
+        <button class="btn-secondary">Cancel</button>
+    </div>
+    {% endfor %}
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          <span>{{ message }}</span>
+          <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Orders</h2>
+
+<!-- Place Order Form -->
+<form method="POST" class="form-card">
+    <label>Table</label>
+    <select name="table_id" required>
+        <option value="" selected>-- Select a Table --</option>
+        {% for t in tables %}
+            <option value="{{ t.id }}">Table {{ t.id }} (Seats: {{ t.capacity }})</option>
+        {% endfor %}
+    </select>
+
+    <label>Menu Item</label>
+    <select name="menu_item_id" required>
+        <option value="" selected>-- Select a Dish --</option>
+        {% for i in items %}
+            <option value="{{ i.id }}">{{ i.name }} - {{ i.price }} KES</option>
+        {% endfor %}
+    </select>
+
+    <label>Quantity</label>
+    <input type="number" name="quantity" min="1" required>
+
+    <button type="submit" class="btn-primary">Place Order</button>
+</form>
+
+<hr>
+
+<!-- Orders Table -->
+<table class="styled-table">
+  <tr>
+    <th>Order ID</th>
+    <th>Table</th>
+    <th>Status</th>
+    <th>Items</th>
+    <th>Total</th>
+    <th>Actions</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <td>{{ order.id }}</td>
+    <td>Table {{ order.table_id }}</td>
+    <td>{{ order.status }}</td>
+    <td>
+      {% for item in order.items %}
+        {{ item.menu_item.name }} (x{{ item.quantity }})<br>
+      {% endfor %}
+    </td>
+    <td>{{ order.total_amount }} KES</td>
+    <td>
+      <!-- Action Buttons -->
+      {% if order.status == 'pending' %}
+        <!-- Waiter marks served -->
+        <form method="POST" action="{{ url_for('update_order', order_id=order.id, status='served') }}">
+          <button class="btn-info">Mark Served</button>
+        </form>
+        <!-- Chef marks prepared -->
+        <form method="POST" action="{{ url_for('update_order', order_id=order.id, status='prepared') }}">
+          <button class="btn-warning">Mark Prepared</button>
+        </form>
+      {% endif %}
+
+      <!-- Manager deletes order -->
+      <form method="POST" action="{{ url_for('delete_order', order_id=order.id) }}">
+        <button class="btn-danger">Delete</button>
+      </form>
+
+      <!-- Link payment -->
+      {% if order.status == 'served' %}
+        <form method="POST" action="{{ url_for('link_payment', order_id=order.id) }}">
+          <button class="btn-success">Record Payment</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          <span>{{ message }}</span>
+          <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

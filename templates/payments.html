@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Payments</h2>
+
+<form method="POST" action="/pay" class="form-card">
+    <label>Order ID</label>
+    <input type="number" name="order_id" required>
+
+    <label>Amount</label>
+    <input type="number" name="amount" required>
+
+    <label>Phone (M-Pesa)</label>
+    <input type="text" name="phone" placeholder="2547XXXXXXXX" required>
+
+    <button class="btn-primary" type="submit">Pay with M-Pesa</button>
+</form>
+
+<div class="card-grid">
+    {% for payment in payments %}
+    <div class="card">
+        <h3>Payment #{{ payment.id }}</h3>
+        <p>Order: {{ payment.order_id }} | Amount: KES {{ payment.amount }}</p>
+        <p>Method: {{ payment.method }} | Status: {{ payment.status }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          <span>{{ message }}</span>
+          <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+{% endblock %}
