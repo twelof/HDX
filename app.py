@@ -5,17 +5,19 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 # --- Flask setup and database configuration ---
 # We’re wiring up Flask with SQLAlchemy and pointing it to our SQLite hotel DB.
+load_dotenv()
 app = Flask(__name__)
 import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI`')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
 db.init_app(app)
-
+if not app.config['SQLALCHEMY_DATABASE_URI']:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://hxd_hotel_db_user:ucLPDWidsiF3Pz9OPttymvc82ubHnVRI@dpg-d80cecvlk1mc73d8iai0-a.oregon-postgres.render.com/hxd_hotel_db"
 
 import requests
 import base64
